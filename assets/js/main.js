@@ -24,33 +24,41 @@ let cities_list = document.querySelector(".cities_list");
 let list_display = document.querySelectorAll("#list_display");
 
 
-setInterval(() => {
-    let currentDate = new Date().toUTCString().slice(0, 16);
-    let currentTime = new Date().toLocaleTimeString().slice(0, 8);
-    current_date_time.innerHTML = `${currentDate} , ${currentTime} `;
-}, 1000);
+// setInterval(() => {
+//     let currentDate = new Date().toUTCString().slice(0, 16);
+//     let currentTime = new Date().toLocaleTimeString().slice(0, 8);
+//     current_date_time.innerHTML = `${currentDate} , ${currentTime} `;
+// }, 1000);
 
 let getCity = () => {
     let cityName = inputCity.value;
     let apiKey = "0ebb12e9335b4c5c02f802aa1709b8ab";
     let units = "metric";
+    let lang = 'DE'
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
-    fetch(url)
+    let url2 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=${units}&lang=${lang}`
+    fetch(url2)
         .then((response) => response.json())
         .then((json) => {
-            // console.log(json);
+            console.log(json);
+            console.log(json.city.name);
+            console.log(json.list[1].dt_txt.slice(11, 16));
+            console.log(new Date(json.list[15].dt_txt).toUTCString().slice(0, 3));
+
             // console.log(new Date(json.dt * 1000));
-            let sunrise = new Date(json.sys.sunrise * 1000)
+            let sunrise = new Date(json.city.sunrise * 1000)
                 .toLocaleTimeString()
                 .slice(0, 5);
-            let sunset = new Date(json.sys.sunset * 1000)
+            let sunset = new Date(json.city.sunset * 1000)
                 .toLocaleTimeString()
                 .slice(0, 5);
+            let currentDate = new Date(json.list[1].dt_txt).toUTCString().slice(0, 16);
+            let currentTime = new Date().toLocaleTimeString().slice(0, 5);
 
             // current_temp.innerHTML = `${Math.floor(json.main.temp)}℃`
             // icon.src = `http://openweathermap.org/img/wn/${json.weather[0].icon}@2x.png`
             // icon.alt = `${json.weather[0].description}`
-            //     // document.body.style.backgroundImage = `url(https://source.unsplash.com/1600x900/?${json.name}`
+            // document.body.style.backgroundImage = `url(https://source.unsplash.com/1600x900/?${json.name}`
             // Cloudy.innerHTML = `${(json.weather[0].description).toUpperCase()}`
             // city_name.innerHTML = `${json.name}   <i class="las la-map-marker"></i>`
 
@@ -64,31 +72,62 @@ let getCity = () => {
             // wetterDisplay.classList.add('wetter')
             // document.querySelector('a').innerHTML = 'X'
 
-            let weather = ` <div id="weather">
-<div class="weather_display">
-    <h1 id="current_temp">${Math.floor(json.main.temp)}℃</h1>
-    <div class="weather_icon">
-        <img src="http://openweathermap.org/img/wn/${
-          json.weather[0].icon
-        }@2x.png" id="icon" alt="${json.weather[0].description}">
-        <p id="cloudy">${json.weather[0].description.toUpperCase()}</p>
+            let weather = ` 
+            <div id="weather">
+               <div class="weather_display">
+               <h1 id="current_temp">${Math.floor(json.list[0].main.temp)}℃</h1>
+               <div class="weather_icon">
+               <img src="http://openweathermap.org/img/wn/${json.list[0].weather[0].icon}@2x.png" id="icon" alt="${json.list[0].weather[0].description}">
+               <p id="cloudy">${json.list[0].weather[0].description.toUpperCase()}</p>
+               </div>
+            </div>
+            <h3 id="city_name">${json.city.name}   <i class="las la-map-marker"></i></h3>
+            <p id="country">${json.city.country}</p>
+            <p id="current_date_time">${currentDate}, ${currentTime} </p>
+            <p id="detail"></p>
+            <p id="detail_temp">${Math.floor(json.list[0].main.temp_max)}℃ / ${Math.floor(json.list[0].main.temp_min)}℃ feels like ${Math.floor(json.list[0].main.feels_like)}℃</p>
+            <p id="humidity"><i class="las la-tint"></i> Feuchtigkeit : ${json.list[0].main.humidity} %</p>
+            <p id="wind_speed"><i class="las la-wind"></i>  Windgeschwindigkeit : ${json.list[0].wind.speed} m/s</p>
+            <p id="sunrise"><i class="las la-sun"></i> Sonnenaufgang: ${sunrise} am</p>
+            <p id="sunset"><i class="las la-moon"></i> Sonnenuntergang: ${sunset} pm</p>
+            <i id="delete_icon" class="lar la-trash-alt"></i>
+            </div> 
+
+            <div class="five_hours">
+            <span id="first_hour">${json.list[1].dt_txt.slice(11, 16)}</span>
+            <span id="second_hour">${json.list[2].dt_txt.slice(11, 16)}</span>
+            <span id="third_hour">${json.list[3].dt_txt.slice(11, 16)}</span>
+            <span id="fourth_hour">${json.list[4].dt_txt.slice(11, 16)}</span>
+            <span id="fifth_hour">${json.list[5].dt_txt.slice(11, 16)}</span>
+            <img src="http://openweathermap.org/img/wn/${json.list[1].weather[0].icon}@2x.png" id="icon" alt="${json.list[1].weather[0].description}">
+            <img src="http://openweathermap.org/img/wn/${json.list[2].weather[0].icon}@2x.png" id="icon" alt="${json.list[2].weather[0].description}">
+            <img src="http://openweathermap.org/img/wn/${json.list[3].weather[0].icon}@2x.png" id="icon" alt="${json.list[3].weather[0].description}">
+            <img src="http://openweathermap.org/img/wn/${json.list[4].weather[0].icon}@2x.png" id="icon" alt="${json.list[4].weather[0].description}">
+            <img src="http://openweathermap.org/img/wn/${json.list[5].weather[0].icon}@2x.png" id="icon" alt="${json.list[5].weather[0].description}">
+            <span id="first_temp">${Math.floor(json.list[1].main.temp)}℃</span>
+            <span id="second_temp">${Math.floor(json.list[2].main.temp)}℃</span>
+            <span id="third_temp">${Math.floor(json.list[3].main.temp)}℃</span>
+            <span id="fourth_temp">${Math.floor(json.list[4].main.temp)}℃</span>
+            <span id="fifth_temp">${Math.floor(json.list[5].main.temp)}℃</span>
+        </div>
+        <div class="five_days">
+        <span id="first_day">${new Date(json.list[7].dt_txt).toUTCString().slice(0, 3)}</span>
+        <span id="second_day">${new Date(json.list[15].dt_txt).toUTCString().slice(0, 3)}</span>
+        <span id="third_day">${new Date(json.list[23].dt_txt).toUTCString().slice(0, 3)}</span>
+        <span id="fourth_day">${new Date(json.list[31].dt_txt).toUTCString().slice(0, 3)}</span>
+        <span id="fifth_day">${new Date(json.list[39].dt_txt).toUTCString().slice(0, 3)}</span>
+        <img src="http://openweathermap.org/img/wn/${json.list[7].weather[0].icon}@2x.png" id="icon" alt="${json.list[1].weather[0].description}">
+        <img src="http://openweathermap.org/img/wn/${json.list[15].weather[0].icon}@2x.png" id="icon" alt="${json.list[2].weather[0].description}">
+        <img src="http://openweathermap.org/img/wn/${json.list[23].weather[0].icon}@2x.png" id="icon" alt="${json.list[3].weather[0].description}">
+        <img src="http://openweathermap.org/img/wn/${json.list[31].weather[0].icon}@2x.png" id="icon" alt="${json.list[4].weather[0].description}">
+        <img src="http://openweathermap.org/img/wn/${json.list[39].weather[0].icon}@2x.png" id="icon" alt="${json.list[5].weather[0].description}">
+        <span id="first_temp">${Math.floor(json.list[7].main.temp)}℃</span>
+        <span id="second_temp">${Math.floor(json.list[15].main.temp)}℃</span>
+        <span id="third_temp">${Math.floor(json.list[23].main.temp)}℃</span>
+        <span id="fourth_temp">${Math.floor(json.list[31].main.temp)}℃</span>
+        <span id="fifth_temp">${Math.floor(json.list[39].main.temp)}℃</span>
     </div>
-
-</div>
-<h3 id="city_name">${json.name}   <i class="las la-map-marker"></i></h3>
-<p id="country">${json.sys.country}</p>
-
-<p id="detail"></p>
-<p id="detail_temp">${Math.floor(json.main.temp_max)}℃ / ${Math.floor(
-        json.main.temp_min
-      )}℃ feels like ${Math.floor(json.main.feels_like)}℃</p>
-<p id="humidity">Humidity : ${json.main.humidity} %</p>
-<p id="wind_speed">Wind speed : ${json.wind.speed} m/s</p>
-<p id="sunrise">Sunrise: ${sunrise} am</p>
-<p id="sunset">Sunset: ${sunset} pm</p>
-<i id="delete_icon" class="lar la-trash-alt"></i>
-</div> 
-`;
+            `;
 
             cities_list.innerHTML += `<li id="list_display">${weather}</li>`;
 
@@ -97,38 +136,39 @@ let getCity = () => {
 
             delete_icon.forEach((icon) => {
                 icon.addEventListener("click", (e) => {
+                    console.log(e.target.parentElement.parentElement);
                     e.target.parentElement.parentElement.remove();
                 });
             })
 
 
 
-            if (json.weather[0].main === 'Clear') {
+            if (json.list[0].weather[0].main === 'Clear') {
                 document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1525490829609-d166ddb58678?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80")';
                 document.getElementById('input_city').style.textAlign = 'center';
                 current_date_time.style.color = 'white';
-            } else if (json.weather[0].main === 'Clouds') {
+            } else if (json.list[0].weather[0].main === 'Clouds') {
                 document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1499346030926-9a72daac6c63?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80")';
                 document.getElementById('input_city').style.textAlign = 'center';
                 document.getElementById('input_city').style.color = 'black';
                 current_date_time.style.color = 'white';
 
-            } else if (json.weather[0].main === 'Rain') {
+            } else if (json.list[0].weather[0].main === 'Rain') {
                 document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")';
                 document.getElementById('input_city').style.textAlign = 'center';
                 document.getElementById('input_city').style.color = 'white';
                 current_date_time.style.color = 'white';
-            } else if (json.weather[0].main === 'Mist') {
+            } else if (json.list[0].weather[0].main === 'Mist') {
                 document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1466226629899-41a4623ca86f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80")';
                 document.getElementById('input_city').style.textAlign = 'center';
                 document.getElementById('input_city').style.color = 'white';
                 current_date_time.style.color = 'white';
-            } else if (json.weather[0].main === 'Snow') {
+            } else if (json.list[0].weather[0].main === 'Snow') {
                 document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1507179938544-5e9eada02714?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80")';
                 document.getElementById('input_city').style.textAlign = 'center';
                 document.getElementById('input_city').style.color = 'black';
                 current_date_time.style.color = 'black';
-            } else if (json.weather[0].main === 'Thunderstorm') {
+            } else if (json.list[0].weather[0].main === 'Thunderstorm') {
                 document.body.style.backgroundImage = 'url("https://images.unsplash.com/photo-1509401934319-cb35b87bf39e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")';
                 document.getElementById('input_city').style.textAlign = 'center';
                 document.getElementById('input_city').style.color = 'white';
