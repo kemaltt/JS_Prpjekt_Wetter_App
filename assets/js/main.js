@@ -41,11 +41,6 @@ let getCity = () => {
         .then((response) => response.json())
         .then((json) => {
             console.log(json);
-            console.log(json.city.name);
-            console.log(json.list[1].dt_txt.slice(11, 16));
-            console.log(new Date(json.list[15].dt_txt).toUTCString().slice(0, 3));
-
-            // console.log(new Date(json.dt * 1000));
             let sunrise = new Date(json.city.sunrise * 1000)
                 .toLocaleTimeString()
                 .slice(0, 5);
@@ -55,22 +50,8 @@ let getCity = () => {
             let currentDate = new Date(json.list[1].dt_txt).toUTCString().slice(0, 16);
             let currentTime = new Date().toLocaleTimeString().slice(0, 5);
 
-            // current_temp.innerHTML = `${Math.floor(json.main.temp)}℃`
-            // icon.src = `http://openweathermap.org/img/wn/${json.weather[0].icon}@2x.png`
-            // icon.alt = `${json.weather[0].description}`
-            // document.body.style.backgroundImage = `url(https://source.unsplash.com/1600x900/?${json.name}`
-            // Cloudy.innerHTML = `${(json.weather[0].description).toUpperCase()}`
-            // city_name.innerHTML = `${json.name}   <i class="las la-map-marker"></i>`
 
-            // country.innerHTML = `${json.sys.country}`
-            //     // detail.innerHTML = `Cloudy: ${json.weather[0].description}`
-            // detail_temp.innerHTML = `${Math.floor(json.main.temp_max)}℃ / ${Math.floor(json.main.temp_min)}℃ feels like ${Math.floor(json.main.feels_like)}℃`
-            // humidity.innerHTML = `Humidity : ${json.main.humidity} %`
-            // wind_speed.innerHTML = `Wind speed : ${json.wind.speed} m/s`
-            // sunRise.innerHTML = `Sunrise: ${sunrise} am`
-            // sunSet.innerHTML = `Sunset: ${sunset} pm`
-            // wetterDisplay.classList.add('wetter')
-            // document.querySelector('a').innerHTML = 'X'
+            // document.body.style.backgroundImage = `url(https://source.unsplash.com/1600x900/?${json.name}`
 
             let weather = ` 
             <div id="weather">
