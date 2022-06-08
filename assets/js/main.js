@@ -34,7 +34,7 @@ let getCity = () => {
     let cityName = inputCity.value;
     let apiKey = "0ebb12e9335b4c5c02f802aa1709b8ab";
     let units = "metric";
-    let lang = 'DE'
+    let lang = 'en'
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
     let url2 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=${units}&lang=${lang}`
     fetch(url2)
@@ -67,10 +67,10 @@ let getCity = () => {
             <p id="current_date_time">${currentDate}, ${currentTime} </p>
             <p id="detail"></p>
             <p id="detail_temp">${Math.floor(json.list[0].main.temp_max)}℃ / ${Math.floor(json.list[0].main.temp_min)}℃ feels like ${Math.floor(json.list[0].main.feels_like)}℃</p>
-            <p id="humidity"><i class="las la-tint"></i> Feuchtigkeit : ${json.list[0].main.humidity} %</p>
-            <p id="wind_speed"><i class="las la-wind"></i>  Windgeschwindigkeit : ${json.list[0].wind.speed} m/s</p>
-            <p id="sunrise"><i class="las la-sun"></i> Sonnenaufgang: ${sunrise} am</p>
-            <p id="sunset"><i class="las la-moon"></i> Sonnenuntergang: ${sunset} pm</p>
+            <p id="humidity"><i class="las la-tint"></i> Humidity : ${json.list[0].main.humidity} %</p>
+            <p id="wind_speed"><i class="las la-wind"></i>   Wind speed  : ${json.list[0].wind.speed} m/s</p>
+            <p id="sunrise"><i class="las la-sun"></i> Sunrise: ${sunrise} am</p>
+            <p id="sunset"><i class="las la-moon"></i> Sunset: ${sunset} pm</p>
             <i id="delete_icon" class="lar la-trash-alt"></i>
             </div> 
 
